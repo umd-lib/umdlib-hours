@@ -1,0 +1,4 @@
+umdlib_hours.admin_settings_form:
+  title: 'UMD Libraries Hours'
+  route_name: umdlib_hours.admin_settings_form
+  weight: 99

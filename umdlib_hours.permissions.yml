@@ -1,0 +1,4 @@
+access umdlib_hours configuration:
+  title: 'Access UMDLib Hours Configuration'
+  description: 'Allows users to access to LibCal API configuration.'
+  restrict access: TRUE

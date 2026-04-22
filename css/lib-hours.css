@@ -1,0 +1,47 @@
+@charset "UTF-8";
+/* CSS Document */
+
+.hours-main-grid{
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-column-gap: 3rem;    
+  grid-row-gap: 1.5rem;
+}
+
+.hours-main-grid .hours1,
+.hours-main-grid .hours2,
+.hours-main-grid .hours3,
+.hours-main-grid .hours4,
+.hours-main-grid .hours5,
+.hours-main-grid .hours6,
+.hours-main-grid .hours7,
+.hours-main-grid .hours8 {
+  grid-area: auto;
+}
+
+.hours-embed h3 {
+  font-size: 1.5rem;
+}
+
+.util-current-date {
+  background-color: #bdf4d8;
+}
+
+@media (max-width: 1199px){
+  .hours-main-grid{
+    grid-template-columns: auto auto;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 991px){
+  .hours-main-grid {
+    grid-template-columns: auto;
+    }
+}
+
+@media (max-width: 576px) {
+  .hours-main-grid .utility-hours {
+    display: block;
+  }
+}

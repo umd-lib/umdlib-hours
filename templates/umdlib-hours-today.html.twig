@@ -1,0 +1,88 @@
+{#
+/**
+ * @file
+ * lib-hours-today template
+ *
+ * Variables:
+ *   - hours
+ *   - branch_prefix
+ *   - branch_suffix
+ */
+#}
+{{ attach_library('lib_cal/lib-cal') }}
+{% set twentyFourHrs = FALSE %}
+<div class="hours-embed">
+  {% if current_date %}
+    <h3>{{ current_date|date("l, F j") }}</h3>
+  {% endif %}
+  <div class="hours-main">
+    <div class="hours1">
+      {% if hours %}
+        {% for location in hours %}
+          {% if location.name is not empty %}
+            {% set lib_id = location.lid %}
+            <div class="utility-border">
+              <span class="utility-location">
+                {% if locations[lib_id] %}
+                  {% if urls[lib_id] %}
+                    <a href="{{urls[lib_id]}}">
+                      {{ locations[lib_id]|replace({'|chev|' : '<i class="fas fa-chevron-right"></i>'})|raw }}
+                    </a>
+                  {% else %}
+                    {{ locations[lib_id]|replace({'|chev|' : '<i class="fas fa-chevron-right"></i>'})|raw }}
+                  {% endif %}
+                {% else %}
+                  {{ location.name|replace({'|chev|' : '<i class="fas fa-chevron-right"></i>'})|raw }}
+                {% endif %}
+                {% if location.name == 'McKeldin Library' %}<span style="font-weight: 1">(Main)</span>{% endif %}
+              </span>
+              <span class="utility-hours"> 
+                {% if location.dates %}
+                  {% for date, location_info in location.dates %}
+                    {% if location_info.hours %}
+                      {% for hours_info in location_info.hours %}
+                        {% if location.name == 'McKeldin Library' %}
+                          {{ hours_info.from|replace({'12:00AM' : '24 Hours'}) }} 
+                          {%if hours_info.to %}
+                            - {{ hours_info.to|replace({'12:00AM' : '24 Hours'}) }}
+                          {% endif %}
+                        {% else %}
+                          {{ hours_info.from }} 
+                          {%if hours_info.to %}
+                            - {{ hours_info.to }}
+                          {% endif %}
+                        {% endif %}
+                      {% endfor %}
+                    {% elseif location_info.status %}
+                      {% if location_info.status == 'text' %}
+                        {{ location_info.text|raw }}
+                      {% elseif location_info.status == 'closed' %}
+                        Closed
+                      {% elseif location_info.status == '24hours' %}
+                        24 Hours *
+                        {% set twentyFourHrs = TRUE %}
+                      {% endif %}
+                      {% if hours_info.to == '12:00AM' %}
+                        {% set twentyFourHrs = TRUE %}
+                      {% endif %}
+                      {% if hours_info.from == '12:00AM' %}
+                        {% set twentyFourHrs = TRUE %}
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                {% elseif location.name %}
+                  --
+                {% endif %}
+              </span>
+            </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        {% if twentyFourHrs == TRUE %}
+          <div class="hours-heading-note">
+            * Campus ID required 11pm-8am.
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>

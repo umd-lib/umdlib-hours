@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * LibCal module install file.
+ */
+
+/**
+ * Install configuration.
+ */
+function umdlib_hours_update_8001() {
+  \Drupal::service('config.installer')->installDefaultConfig('module', 'umdlib_hours');
+}
+
+/**
+ * Implements hook_uninstall
+ */
+function umdlib_hours_uninstall() {
+}

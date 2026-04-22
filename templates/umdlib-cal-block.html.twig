@@ -1,0 +1,39 @@
+{#
+/**
+ * @file
+ * lib-cal-block template
+ *
+ * Variables:
+ *   - events
+ *   - no_events
+ */
+#}
+{{ attach_library('lib_cal/lib-cal') }}
+<div class='lib-cal-block'>
+  {% if events|length > 0 %}
+    {% for event in events %}
+      <div class='lib-cal-event'>
+        <div class='lib-cal-event-time'>
+          <span>{{ event.month }}</span>
+          <span class="lib-cal-event-time-day">{{ event.day }}</span>
+          <span>—</span>
+          <span>{{ event.hour }}</span>
+        </div>
+        <div class='lib-cal-event-detail'>
+          {# <div class='lib-cal-event-category'>
+            {{ event.category.0 }}
+          </div> #}
+          <div class='lib-cal-event-title'>
+            <a href='{{ event.url }}' title='{{ event.title }}'>{{ event.title }}</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <h4>Upcoming Events</h4>
+    <div class='lib-cal-no-events'>
+      <span class="fas fa-solid fa-calendar"></span>
+      <span>{{ no_events }}</span>
+    </div>
+  {% endif %}
+</div>

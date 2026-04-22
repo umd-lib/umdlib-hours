@@ -1,0 +1,105 @@
+/**
+ * LibCal CSS
+ */
+.lib-cal-block {
+  border-left: 3px solid #ccc;
+  padding-left: 1.5rem;
+  padding-bottom: 3rem;
+}
+.lib-cal-event {
+  display: flex;
+}
+
+.lib-cal-event-time {
+  display: inline-block;
+  border: 0.2rem solid lightgray;
+  width: 6.5rem;
+  height: 6.5rem;
+  text-align: center;
+  margin: 0 1rem 2rem 0;
+  font-size: 0.8em;
+  color: dimgray;
+  line-height: 0.8;
+  padding: 1.25rem;
+  font-weight: bold;
+}
+
+.lib-cal-event-time span {
+  display: block;
+  text-transform: uppercase;
+}
+.lib-cal-event-time-day {
+  font-size: 3em;
+  color: #e21833;
+}
+
+.lib-cal-event-detail {
+  display: inline-block;
+  padding-left: 0.5rem;
+  padding-top: 1rem;
+  line-height: 1.25;
+}
+
+.lib-cal-event-category {
+  text-transform: uppercase;
+  font-size: 0.9em;
+  font-weight: lighter;
+}
+
+.lib-cal-event-title {
+  padding-top: 0;
+  font-size: 1rem;
+}
+
+.lib-cal-event-title a {
+  font-weight: bold;
+  color: black;
+}
+@media (max-width: 1200px) {
+  .lib-cal-block {
+    margin-top: 2rem;
+    border-left: none;
+    padding-left: 0;
+    padding-bottom: 0;
+  }
+}
+@media (max-width: 800px) {
+  .news-article {
+    margin-bottom: 2rem !important;
+  }
+}
+@media (max-width: 576px) {
+}
+@media (max-width: 320px) {
+}
+
+/**
+ * Hours
+ */
+.lib-hours-hour {
+  padding-left: 20px;
+}
+
+.lib-hours-location {
+  font-weight: bold;
+}
+
+.lib-hours-details {
+  float: right;
+}
+
+.lib-hours-constrained {
+  max-width: 375px;
+}
+
+.lib-cal-no-events {
+  display: flex;
+}
+
+.lib-cal-no-events span {
+  margin-right: 10px;
+}
+
+.lib-cal-no-events span.fas {
+  font-size: 1.6rem;
+}

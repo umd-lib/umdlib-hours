@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @file
+ * Module file for umdlib_hours module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function umdlib_hours_theme() {
+  return [
+    'umdlib_hours_block' => [
+      'variables' => [
+        'events' => '',
+        'no_events' => '',
+      ],
+    ],
+    'umdlib_hours_today' => [
+      'variables' => [
+        'hours' => '',
+        'row_class' => '',
+        'grid_class' => '',
+        'current_date' => '',
+        'shady_grove_url' => '',
+        'hours_class' => '',
+        'locations' => '',
+        'urls' => '',
+      ],
+    ],
+    'umdlib_hours_today_util' => [
+      'variables' => [
+        'hours' => '',
+        'row_class' => '',
+        'grid_class' => '',
+        'current_date' => '',
+        'shady_grove_url' => '',
+        'all_libraries_url' => '',
+        'is_mobile' => '',
+        'hours_class' => '',
+        'locations' => '',
+        'urls' => '',
+      ],
+    ],
+    'umdlib_hours_range' => [
+      'variables' => [
+        'hours' => '',
+        'row_class' => '',
+        'grid_class' => '',
+        'current_date' => '',
+        'week_date' => '',
+        'shady_grove_url' => '',
+        'hours_class' => '',
+        'locations' => '',
+        'urls' => '',
+      ],
+    ],
+    'umdlib_button' => [
+      'variables' => [
+        'button_text' => '',
+        'button_url' => '',
+      ],
+    ],
+  ];
+}

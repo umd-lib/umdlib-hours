@@ -1,0 +1,8 @@
+name: UMD Libraries Hours
+description: Provides a custom block module that displays calendar events pulled from LibCal API.
+
+package: 'UMD Services'
+configure: lib_cal.admin_settings_form
+type: module
+
+core_version_requirement: ^11

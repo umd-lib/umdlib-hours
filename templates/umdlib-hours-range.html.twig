@@ -1,0 +1,106 @@
+{#
+/**
+ * @file
+ * lib-hours-today template
+ *
+ * Variables:
+ *   - hours
+ */
+#}
+{{ attach_library('lib_cal/lib-cal') }}
+{% set increment = 0 %}
+{% set twentyFourHrs = FALSE %}
+{% set formattedDate = current_date|date("l, F j") %}
+<div class="hours-embed">
+  {% if current_date %}
+    <h3>Week of {{ week_date|date("l, F j") }}</h3>
+  {% endif %}
+  <div class="{{ hours_class }}">
+    {% if hours %}
+      {% for location in hours %}
+        {% set lib_id = location.lid %}
+        {% set increment = increment + 1 %}
+        <div class="hours{{ increment }}">
+          <div class="hours-heading">
+            {% if locations[lib_id] %}
+              {% if urls[lib_id] %}
+                <a href="{{urls[lib_id]}}">{{ locations[lib_id] }}</a>
+              {% else %}
+                {{ locations[lib_id] }}
+              {% endif %}
+            {% else %}
+              {{ location.name }}
+            {% endif %}
+            {% if location.name == 'McKeldin Library' %}(Main){% endif %}
+          </div> 
+          {% if location.dates %}
+            {% for date, location_info in location.dates %}
+                {% set thisDate = date|date("l, F j") %}
+                {% if thisDate == formattedDate %}
+                  <div class="utility-border util-current-date">
+                {% else %}
+                  <div class="utility-border">
+                {% endif %}
+                <span class="utility-date">{{ thisDate }}</span>
+                {% if location_info.hours %}
+                  {% for hours_info in location_info.hours %}
+                    <span class="utility-hours">
+                      {% if location.name == 'McKeldin Library' %}
+                        {{ hours_info.from|replace({'12:00AM' : '24 Hours *'}) }} 
+                        {%if hours_info.to %}
+                          - {{ hours_info.to|replace({'12:00AM' : '24 Hours *'}) }}
+                        {% endif %}
+                        {% if hours_info.to == '12:00AM' %}
+                          {% set twentyFourHrs = TRUE %}
+                        {% endif %}
+                        {% if hours_info.from == '12:00AM' %}
+                          {% set twentyFourHrs = TRUE %}
+                        {% endif %}
+                      {% else %}
+                        {{ hours_info.from }} 
+                        {%if hours_info.to %}
+                          - {{ hours_info.to }}
+                        {% endif %}
+                      {% endif %}
+                    </span>
+                  <!-- end hours_info -->
+                  {% endfor %}
+                {% else %}
+                  {% if location_info.status == 'text' %}
+                    <span class="utility-hours">{{ location_info.text|raw }}</span>
+                  {% elseif location_info.status == 'closed' %}
+                    <span class="utility-hours">Closed</span>
+                  {% elseif location_info.status == '24hours' %}
+                    {% set twentyFourHrs = TRUE %}
+                    <span class="utility-hours">24 Hours *</span>
+                  {% endif %}
+                {% endif %}
+              </div>
+            <!-- end date,location_info -->
+            {% endfor %}
+            {% if twentyFourHrs == TRUE %}
+              <div class="hours-heading-note">
+                * Campus ID required 11pm-8am.
+              </div>
+              {% set twentyFourHrs = FALSE %}
+            {% endif %}
+          {% else %}
+            <div class="utility-border">
+              <span class="utility-date">--</span>
+            </div>
+          {% endif %}
+        </div>
+        <!-- end location -->
+      {% endfor %}
+      {% if shady_grove_url %}
+        {% set increment = increment + 1 %}
+        <div class="hours{{ increment }}">
+          <div class="hours-heading">Shady Grove</div>
+          <div class="utility-border">
+            <span class="utility-date"><a href="{{ shady_grove_url }}">View Hours</a></span>
+          </div>
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
