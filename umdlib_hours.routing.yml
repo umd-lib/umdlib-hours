@@ -1,7 +1,7 @@
 umdlib_hours.admin_settings_form:
   path: '/admin/config/system/umdlib_hours'
   defaults:
-    _form: '\Drupal\umdlib_hours\Form\LibCalSettingsForm'
+    _form: '\Drupal\umdlib_hours\Form\UmdLibHoursSettingsForm'
     _title: 'UMDLib Hours Settings Form'
   requirements:
     _permission: 'access umdlib_hours configuration'

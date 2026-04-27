@@ -9,21 +9,12 @@
  *   - branch_suffix
  */
 #}
-{{ attach_library('lib_cal/lib-cal') }}
 {% set twentyFourHrs = FALSE %}
 {% set increment = 0 %}
-{% if is_mobile %}
-  <!-- mobile hours -->
-{% else %}
-  <div id="showHours" tabindex="0">
-{% endif %}
+<div id="showHours" tabindex="0">
   <div class="hours-grid">
     <!-- all hours -->
     {% if hours %}
-      {% if current_date %}
-        <div class="hours-heading">{{ current_date|date("l, F j") }}</div>
-      {% endif %}
-      <div class="hours-heading-note">Library Hours are subject to change.</div>
       <!-- locations -->
       {% for location in hours %}
         {% set increment = increment + 1 %}
@@ -106,17 +97,4 @@
       {% endif %}
     <!-- end all hours -->
   </div>
-  {% if twentyFourHrs == TRUE %}
-    <div class="hours-heading-note">
-      * Campus ID required 11pm-8am.
-    </div>
-  {% endif %}
-{% if is_mobile %}
-  <!-- mobile hours -->
-{% else %}
-  <button onclick="exitHours()" class="close-btn">
-    <span aria-hidden="true" class="fas fa-times"></span>
-    <span class="sr-only">Exit Hours</span>
-  </button>
-  </div>
-{% endif %}
+</div>

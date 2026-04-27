@@ -19,14 +19,14 @@ use Drupal\umdlib_hours\Controller\UmdLibHoursController;
  *   category = @Translation("custom"),
  * )
  */
-class UmdLibHoursBlock extends BlockBase {
+class UmdLibHoursCalBlock extends BlockBase {
 
   /**
    * {@inheritdoc}
    */
   public function build() {
     $blockConfig = $this->getConfiguration();
-    $libCalController = new UmdLibHoursController();
+    $libCalController = new UmdLibHoursCalController();
     $events = $libCalController->getEvents($blockConfig['limit']);
     $no_events = $blockConfig['no_events_text'];
     return [

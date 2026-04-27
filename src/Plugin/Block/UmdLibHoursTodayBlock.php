@@ -9,7 +9,7 @@ namespace Drupal\umdlib_hours\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\umdlib_hours\Controller\UmdLibHoursController;
-use Drupal\umdlib_hours\Helper\LibCalSettingsHelper;
+use Drupal\umdlib_hours\Helper\UmdLibHoursSettingsHelper;
 use Drupal\Core\Routing;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Core\Url;
@@ -36,6 +36,9 @@ class UmdLibHoursTodayBlock extends BlockBase {
     $libHoursController = new UmdLibHoursController();
     $is_mobile = false;
     $librariesInfo = $this->getLibrariesLocations();
+    if (empty($librariesInfo)) {
+      return;
+    }
 
     $urls = $librariesInfo['urls'];
     $locations = $librariesInfo['locations'];
@@ -47,27 +50,27 @@ class UmdLibHoursTodayBlock extends BlockBase {
     } else {
       switch ($blockConfig['display_type']) {
         case 'today':
-          $template = 'lib_hours_today';
+          $template = 'umdlib_hours_today';
           $hours = $libHoursController->getToday($blockConfig['libraries'], $debug_date);
           $hours = $this->sortLocations($hours);
           $hours = $this->sortLocationsHeirarchy($hours, $locations);
           break;
         case 'weekly':
-          $template = 'lib_hours_range';
+          $template = 'umdlib_hours_range';
           $hours = $libHoursController->getThisWeek($blockConfig['libraries'], $debug_date);
           $week_date = $hours['hours_from'];
           unset($hours['hours_from']);
           $hours = $this->sortLocations($hours);
           break;
         case 'utility_nav':
-          $template = 'lib_hours_today_util';
+          $template = 'umdlib_hours_today_util';
           $hours = $libHoursController->getToday($blockConfig['libraries'], $debug_date);
           unset($hours['hours_from']);
           $hours = $this->sortLocations($hours);
           $is_mobile = $blockConfig['is_mobile'];
           break;
          default:
-          $template = 'lib_hours_today';
+          $template = 'umdlib_hours_today';
           break;
       }
     }
@@ -182,32 +185,32 @@ class UmdLibHoursTodayBlock extends BlockBase {
   public function blockForm($form, FormStateInterface $form_state) {
     $form = parent::blockForm($form, $form_state);
     $config = $this->getConfiguration();
-    $this->configHelper = LibCalSettingsHelper::getInstance();
+    $this->configHelper = UmdLibHoursSettingsHelper::getInstance();
     $librariesInfo = $this->getLibrariesLocations();
 
     $form['libraries'] = [
       '#type' => 'select',
       '#title' => t('Libraries'),
-      '#default_value' =>  isset($config['libraries']) ? explode(',',$config['libraries']) : array(),
+      '#default_value' =>  !empty($config['libraries']) && is_string($config['libraries']) ? explode(',',$config['libraries']) : array(),
       '#required' => TRUE,
-      '#options' => $librariesInfo['locations'],
+      '#options' => !empty($librariesInfo) ? $librariesInfo['locations'] : [],
       '#multiple' => TRUE,
     ];
     $form['all_libraries_url'] = [
       '#type' => 'textfield',
       '#title' => t('All Libraries URL'),
-      '#default_value' =>  isset($config['all_libraries_url']) ? $config['all_libraries_url'] : null,
+      '#default_value' =>  !empty($config['all_libraries_url']) ? $config['all_libraries_url'] : null,
     ];
     $form['shady_grove_url'] = [
       '#type' => 'textfield',
       '#title' => t('Shady Grove Hours URL'),
-      '#default_value' =>  isset($config['shady_grove_url']) ? $config['shady_grove_url'] : null,
+      '#default_value' =>  !empty($config['shady_grove_url']) ? $config['shady_grove_url'] : null,
     ];
     $display_types = ['today' => t('Today'), 'weekly' => t('Weekly'), 'utility_nav' => t('Utility Nav')];
     $form['display_type'] = [
       '#type' => 'select',
       '#title' => t('Display Type'),
-      '#default_value' => isset($config['display_type']) ? $config['display_type'] : null,
+      '#default_value' => !empty($config['display_type']) ? $config['display_type'] : null,
       '#required' => TRUE,
       '#options' => $display_types,
     ];
@@ -215,12 +218,12 @@ class UmdLibHoursTodayBlock extends BlockBase {
       '#type' => 'checkbox',
       '#title' => t('Is Mobile Block?'),
       '#description' => t('Note: Only affects Utility Nav displays. This option is otherwise ignored.'),
-      '#default_value' => isset($config['is_mobile']) ? $config['is_mobile'] : NULL,
+      '#default_value' => !empty($config['is_mobile']) ? $config['is_mobile'] : NULL,
     ];
     $form['date_display'] = [
       '#type' => 'checkbox',
       '#title' => t('Show current/weekly date?'),
-      '#default_value' => isset($config['date_display']) ? $config['date_display'] : NULL,
+      '#default_value' => !empty($config['date_display']) ? $config['date_display'] : NULL,
     ];
     return $form;
   }
@@ -237,7 +240,7 @@ class UmdLibHoursTodayBlock extends BlockBase {
         $libcal = $term->get('field_libcal_location_id')->value;
         if ($libcal != null) {
           $locations_data[$libcal] = $term->getName();
-          if (!empty($term->field_location_details_page->first())) {
+          if (!empty($term->field_location_details_page) && !empty($term->field_location_details_page->first())) {
             $liburl = Url::fromUri($term->field_location_details_page->first()->uri);
             if ($liburl != null) {
               $url_data[$libcal] = $liburl->toString();
@@ -260,6 +263,10 @@ class UmdLibHoursTodayBlock extends BlockBase {
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
     $libraries = $form_state->getValue('libraries');
+    // We have to have at least one library selected.
+    if (empty($libraries) || (is_array($libraries) && count($libraries) == 0)) {
+      return;
+    }
 
     // the api wants a comma-seperated string.
     $libraries = implode(',', $libraries);

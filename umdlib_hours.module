@@ -55,11 +55,5 @@ function umdlib_hours_theme() {
         'urls' => '',
       ],
     ],
-    'umdlib_button' => [
-      'variables' => [
-        'button_text' => '',
-        'button_url' => '',
-      ],
-    ],
   ];
 }
