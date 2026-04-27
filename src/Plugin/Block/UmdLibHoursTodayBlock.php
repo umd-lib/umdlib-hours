@@ -86,6 +86,11 @@ class UmdLibHoursTodayBlock extends BlockBase {
       }
     }
 
+    $show_location = true;
+    if ($blockConfig['location_display']) {
+      $show_location = false;
+    }
+
     $hours_class = 'hours-main-grid';
     if (count($hours) == 1) {
       $hours_class = 'hours-main';
@@ -102,6 +107,7 @@ class UmdLibHoursTodayBlock extends BlockBase {
       '#current_date' => $current_date,
       '#week_date' => $week_date,
       '#is_mobile' => $is_mobile,
+      '#show_location' => $show_location,
       '#shady_grove_url' => $blockConfig['shady_grove_url'],
       '#all_libraries_url' => $blockConfig['all_libraries_url'],
       '#cache' => [
@@ -225,6 +231,11 @@ class UmdLibHoursTodayBlock extends BlockBase {
       '#title' => t('Show current/weekly date?'),
       '#default_value' => !empty($config['date_display']) ? $config['date_display'] : NULL,
     ];
+    $form['location_display'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Hide location'),
+      '#default_value' => !empty($config['location_display']) ? $config['location_display'] : NULL,
+    ];
     return $form;
   }
 
@@ -269,7 +280,11 @@ class UmdLibHoursTodayBlock extends BlockBase {
     }
 
     // the api wants a comma-seperated string.
-    $libraries = implode(',', $libraries);
+    if (is_array($libraries)) {
+      $libraries = implode(',', $libraries);
+    } else {
+      $libraries = (string) $libraries;
+    }
     $this->setConfigurationValue('libraries', $libraries);
     $this->setConfigurationValue('shady_grove_url', $form_state->getValue('shady_grove_url'));
     $this->setConfigurationValue('all_libraries_url', $form_state->getValue('all_libraries_url'));
@@ -279,5 +294,6 @@ class UmdLibHoursTodayBlock extends BlockBase {
     $this->setConfigurationValue('date_display', $form_state->getValue('date_display'));
     $this->setConfigurationValue('display_type', $form_state->getValue('display_type'));
     $this->setConfigurationValue('is_mobile', $form_state->getValue('is_mobile'));
+    $this->setConfigurationValue('location_display', $form_state->getValue('location_display'));
   }
 }

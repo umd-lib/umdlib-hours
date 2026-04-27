@@ -26,6 +26,7 @@ function umdlib_hours_theme() {
         'hours_class' => '',
         'locations' => '',
         'urls' => '',
+        'show_location' => '',
       ],
     ],
     'umdlib_hours_today_util' => [

@@ -7,14 +7,11 @@
  *   - hours
  *   - branch_prefix
  *   - branch_suffix
+ *   - show_location
  */
 #}
-{{ attach_library('lib_cal/lib-cal') }}
 {% set twentyFourHrs = FALSE %}
 <div class="hours-embed">
-  {% if current_date %}
-    <h3>{{ current_date|date("l, F j") }}</h3>
-  {% endif %}
   <div class="hours-main">
     <div class="hours1">
       {% if hours %}
@@ -23,20 +20,23 @@
             {% set lib_id = location.lid %}
             <div class="utility-border">
               <span class="utility-location">
-                {% if locations[lib_id] %}
+                {% if locations[lib_id] and show_location %}
                   {% if urls[lib_id] %}
                     <a href="{{urls[lib_id]}}">
-                      {{ locations[lib_id]|replace({'|chev|' : '<i class="fas fa-chevron-right"></i>'})|raw }}
+                      {{ locations[lib_id]|raw }}
                     </a>
                   {% else %}
-                    {{ locations[lib_id]|replace({'|chev|' : '<i class="fas fa-chevron-right"></i>'})|raw }}
+                    {{ locations[lib_id]|raw }}
                   {% endif %}
-                {% else %}
-                  {{ location.name|replace({'|chev|' : '<i class="fas fa-chevron-right"></i>'})|raw }}
+                {% elseif show_location %}
+                  {{ location.name|raw }}
                 {% endif %}
-                {% if location.name == 'McKeldin Library' %}<span style="font-weight: 1">(Main)</span>{% endif %}
+                {% if  show_location and location.name == 'McKeldin Library' %}<span style="font-weight: 1">(Main)</span>{% endif %}
               </span>
               <span class="utility-hours"> 
+                {% if current_date %}
+                  <p>Today - {{ current_date|date("m/d/Y l") }}</p>
+                {% endif %}
                 {% if location.dates %}
                   {% for date, location_info in location.dates %}
                     {% if location_info.hours %}
@@ -44,22 +44,23 @@
                         {% if location.name == 'McKeldin Library' %}
                           {{ hours_info.from|replace({'12:00AM' : '24 Hours'}) }} 
                           {%if hours_info.to %}
-                            - {{ hours_info.to|replace({'12:00AM' : '24 Hours'}) }}
+                            <p>Open: {{ hours_info.to|replace({'12:00AM' : '24 Hours'}) }}</p>
                           {% endif %}
                         {% else %}
-                          {{ hours_info.from }} 
+                          <p>Open: {{ hours_info.from }} 
                           {%if hours_info.to %}
-                            - {{ hours_info.to }}
+                              - {{ hours_info.to }}
                           {% endif %}
+                          </p>
                         {% endif %}
                       {% endfor %}
                     {% elseif location_info.status %}
                       {% if location_info.status == 'text' %}
-                        {{ location_info.text|raw }}
+                        <p>{{ location_info.text|raw }}</p>
                       {% elseif location_info.status == 'closed' %}
-                        Closed
+                        <p>Closed</p>
                       {% elseif location_info.status == '24hours' %}
-                        24 Hours *
+                        <p>Open: 24 Hours *</p>
                         {% set twentyFourHrs = TRUE %}
                       {% endif %}
                       {% if hours_info.to == '12:00AM' %}
@@ -71,7 +72,7 @@
                     {% endif %}
                   {% endfor %}
                 {% elseif location.name %}
-                  --
+                  - contact us -
                 {% endif %}
               </span>
             </div>
@@ -80,7 +81,7 @@
         {% endif %}
         {% if twentyFourHrs == TRUE %}
           <div class="hours-heading-note">
-            * Campus ID required 11pm-8am.
+            <p>* Campus ID required 11pm-8am</p>
           </div>
         {% endif %}
       </div>
