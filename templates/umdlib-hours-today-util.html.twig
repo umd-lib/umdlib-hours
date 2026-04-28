@@ -16,23 +16,24 @@
     <!-- all hours -->
     {% if hours %}
       <!-- locations -->
+      <dl>
       {% for location in hours %}
         {% set increment = increment + 1 %}
         {% set lib_id = location.lid %}
-        <div class="utility-border hours{{ increment }}">
-          <span class="utility-location">
-            {% if locations[lib_id] %}
-              {% if urls[lib_id] %}
-                <a href="{{urls[lib_id]}}">{{ locations[lib_id] }}</a>
+          <div class="utility-border hours{{ increment }}">
+            <dt class="utility-location navigation__utility_branch-item">
+              {% if locations[lib_id] %}
+                {% if urls[lib_id] %}
+                  <a href="{{urls[lib_id]}}">{{ locations[lib_id] }}</a>
+                {% else %}
+                  {{ locations[lib_id] }}
+                {% endif %}
               {% else %}
-                {{ locations[lib_id] }}
+                {{ location.name }}
               {% endif %}
-            {% else %}
-              {{ location.name }}
-            {% endif %}
-          </span>
-            {% if location.name == 'McKeldin Library' %}(MAIN){% endif %}
-            <span class="utility-hours"> 
+            {% if location.name == 'McKeldin Library' %}(MAIN)<span class="visually-hidden">(Campus ID required 11pm–8am)</span>{% endif %}
+            </dt>
+            <dd class="utility-hours"> 
               <!-- location dates -->
               {% if location.dates %}
                 <!-- location dates internal -->
@@ -55,13 +56,13 @@
                         {% endif %}
                       {% else %}
                         {{ hours_info.from }} 
-                        {%if hours_info.to %}
+                        {% if hours_info.to %}
                           - {{ hours_info.to }}
                         {% endif %}
                       {% endif %}
                       <!-- End date stuff -->
                     {% endfor %}
-                  <!-- end hours info -->
+                    <!-- end hours info -->
                   {% elseif location_info.status %}
                     {% if location_info.status == 'text' %}
                       {{ location_info.text|raw }}
@@ -75,24 +76,25 @@
                   <!-- end location dates internal -->
                 {% endfor %}
               {% else %}
-                --
+                Contact us for hours
               {% endif %}
               <!-- end location dates -->
-            </span>
+            </dd>
           </div>
         {% endfor %}
         {% if shady_grove_url %}
           {% set increment = increment + 1 %}
           <div class="utility-border hours{{ increment }}">
-            <span class="utility-location">Shady Grove</span> <span class="utility-hours"><a href="{{ shady_grove_url }}">Show Hours</a></span>
+            <dt class="utility-location navigation__utility_branch-item">Shady Grove</dt> <dd class="utility-hours"><a href="{{ shady_grove_url }}">Visit site for hours</a></dd>
           </div>
         {% endif %}
         {% if all_libraries_url %}
           {% set increment = increment + 1 %}
           <div class="utility-border hours{{ increment }}">
-            <span class="utility-location">All libraries</span> <span class="utility-hours"><a href="{{ all_libraries_url }}">All libraries all days</a></span>
+            <dt class="utility-location navigation__utility_branch-item">All libraries</dt> <dd class="utility-hours"><a href="{{ all_libraries_url }}">All libraries all days</a></dd>
           </div>
         {% endif %}
+        </dl>
         <!-- end locations -->
       {% endif %}
     <!-- end all hours -->
