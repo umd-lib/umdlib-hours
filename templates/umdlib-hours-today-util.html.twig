@@ -9,53 +9,55 @@
  *   - all_libraries_url
  */
 #}
+
 {% set twentyFourHrs = FALSE %}
 {% set increment = 0 %}
+
 <div id="showHours" tabindex="0">
-  <div class="hours-grid">
+  <div class="hours-grid utility-branch-list">
+
     <!-- all hours -->
     {% if hours %}
       <!-- locations -->
       <dl>
-      {% for location in hours %}
-        {% set increment = increment + 1 %}
-        {% set lib_id = location.lid %}
+        {% for location in hours %}
+          {% set increment = increment + 1 %}
+          {% set lib_id = location.lid %}
           <div class="utility-border hours{{ increment }}">
-            <dt class="utility-location navigation__utility_branch-item">
+            <dt class="utility-location">
               {% if locations[lib_id] %}
                 {% if urls[lib_id] %}
-                  <a href="{{urls[lib_id]}}">{{ locations[lib_id] }}</a>
+                  <a href="{{ urls[lib_id] }}">{{ locations[lib_id] }}</a>
                 {% else %}
                   {{ locations[lib_id] }}
                 {% endif %}
               {% else %}
                 {{ location.name }}
               {% endif %}
-            {% if location.name == 'McKeldin Library' %}(MAIN)<span class="visually-hidden">(Campus ID required 11pm–8am)</span>{% endif %}
+              {% if location.name == 'McKeldin Library' %}
+                (MAIN)*<span class="visually-hidden">(Campus ID required 11pm–8am)</span>
+              {% endif %}
             </dt>
-            <dd class="utility-hours"> 
+            <dd class="utility-hours t-label">
               <!-- location dates -->
               {% if location.dates %}
                 <!-- location dates internal -->
                 {% for date, location_info in location.dates %}
-                  <! -- location hours or status -->
+                  <!-- location hours or status -->
                   {% if location_info.hours %}
                     <!-- hours info -->
                     {% for hours_info in location_info.hours %}
                       <!-- Date stuff -->
                       {% if location.name == 'McKeldin Library' %}
-                        {{ hours_info.from|replace({'12:00AM' : '* 24 Hours'}) }} 
+                        {{ hours_info.from|replace({'12:00AM': '24 Hours'}) }}
                         {% if hours_info.to %}
-                          - {{ hours_info.to|replace({'12:00AM' : '* 24 Hours'}) }}
+                          - {{ hours_info.to|replace({'12:00AM': '24 Hours'}) }}
                         {% endif %}
-                        {% if hours_info.to == '12:00AM' %}
-                          {% set twentyFourHrs = TRUE %}
-                        {% endif %}
-                        {% if hours_info.from == '12:00AM' %}
+                        {% if hours_info.to == '12:00AM' or hours_info.from == '12:00AM' %}
                           {% set twentyFourHrs = TRUE %}
                         {% endif %}
                       {% else %}
-                        {{ hours_info.from }} 
+                        {{ hours_info.from }}
                         {% if hours_info.to %}
                           - {{ hours_info.to }}
                         {% endif %}
@@ -85,18 +87,24 @@
         {% if shady_grove_url %}
           {% set increment = increment + 1 %}
           <div class="utility-border hours{{ increment }}">
-            <dt class="utility-location navigation__utility_branch-item">Shady Grove</dt> <dd class="utility-hours"><a href="{{ shady_grove_url }}">Visit site for hours</a></dd>
+            <dt class="utility-location">Shady Grove</dt>
+            <dd class="utility-hours t-label">
+              <a href="{{ shady_grove_url }}">Visit site for hours</a>
+            </dd>
           </div>
         {% endif %}
         {% if all_libraries_url %}
           {% set increment = increment + 1 %}
           <div class="utility-border hours{{ increment }}">
-            <dt class="utility-location navigation__utility_branch-item">All libraries</dt> <dd class="utility-hours"><a href="{{ all_libraries_url }}">All libraries all days</a></dd>
+            <dt class="utility-location">All libraries</dt>
+            <dd class="utility-hours t-label">
+              <a href="{{ all_libraries_url }}">See all hours</a>
+            </dd>
           </div>
         {% endif %}
-        </dl>
         <!-- end locations -->
-      {% endif %}
+      </dl>
+    {% endif %}
     <!-- end all hours -->
   </div>
 </div>
