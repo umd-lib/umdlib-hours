@@ -18,6 +18,9 @@
 
     <!-- all hours -->
     {% if hours %}
+      {% if current_date %}
+        <p class="t-body-medium s-stack-medium">Today - {{ current_date|date("m/d/Y l") }}</p>
+      {% endif %}
       <!-- locations -->
       <dl>
         {% for location in hours %}
@@ -72,7 +75,7 @@
                       Closed
                     {% elseif location_info.status == '24hours' %}
                       {% set twentyFourHrs = TRUE %}
-                      * 24 Hours
+                      24 Hours
                     {% endif %}
                   {% endif %}
                   <!-- end location dates internal -->
