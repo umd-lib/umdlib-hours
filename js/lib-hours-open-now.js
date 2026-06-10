@@ -86,15 +86,12 @@
     if (!info) {
       return null;
     }
-    if (info.status) {
-      if (info.status === "closed") {
-        return false;
-      }
-      if (info.status === "24hours") {
-        return true;
-      }
-      // 'text' or anything unexpected: no definitive state.
-      return null;
+    // Definitive whole-day states.
+    if (info.status === "closed") {
+      return false;
+    }
+    if (info.status === "24hours") {
+      return true;
     }
     if (Array.isArray(info.hours) && info.hours.length) {
       for (const slot of info.hours) {
@@ -109,6 +106,7 @@
       }
       return false;
     }
+    // 'text' or anything unexpected with no usable hours: no definitive state.
     return null;
   }
 
