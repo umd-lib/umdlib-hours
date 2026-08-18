@@ -40,8 +40,8 @@ class UmdLibHoursTodayBlock extends BlockBase {
       return;
     }
 
-    $urls = $librariesInfo['urls'];
-    $locations = $librariesInfo['locations'];
+    $urls = !empty($librariesInfo['urls']) ? $librariesInfo['urls'] : NULL;
+    $locations = !empty($librariesInfo['locations']) ? $librariesInfo['locations'] : NULL;
     $week_date = null;
 
     if ($blockConfig['weekly_display']) {
